@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Academia Fantastic</title>
+
+<style>
+
+body{
+    font-family: Arial, sans-serif;
+    background:#1f2937;
+    color:white;
+    text-align:center;
+    padding:30px;
+}
+
+.contenedor{
+    max-width:800px;
+    margin:auto;
+    background:#374151;
+    padding:30px;
+    border-radius:15px;
+    box-shadow:0 0 20px rgba(0,0,0,.4);
+}
+
+h1{
+    color:#fbbf24;
+}
+
+#pregunta{
+    margin-top:20px;
+    margin-bottom:20px;
+}
+
+.opcion{
+    width:90%;
+    padding:15px;
+    margin:10px;
+    border:none;
+    border-radius:10px;
+    font-size:18px;
+    cursor:pointer;
+    background:#2563eb;
+    color:white;
+}
+
+.opcion:hover{
+    background:#1d4ed8;
+}
+
+#resultado{
+    font-size:22px;
+    margin-top:20px;
+    font-weight:bold;
+}
+
+#siguiente{
+    background:#10b981;
+    color:white;
+    border:none;
+    padding:15px 30px;
+    border-radius:10px;
+    font-size:18px;
+    cursor:pointer;
+    margin-top:20px;
+}
+
+#siguiente:hover{
+    background:#059669;
+}
+
+#puntaje{
+    color:#fbbf24;
+}
+
+#contador{
+    font-size:18px;
+    margin-bottom:15px;
+}
+
+</style>
+</head>
+
+<body>
+
+<div class="contenedor">
+
+<h1>🎰 Academia Fantastic</h1>
+
+<h2 id="puntaje">Puntos: 0</h2>
+
+<div id="contador"></div>
+
+<h2 id="pregunta"></h2>
+
+<div id="opciones"></div>
+
+<h3 id="resultado"></h3>
+
+<button id="siguiente">
+Siguiente
+</button>
+
+</div>
+
+<script>
+
+const preguntas = [
+
+{
+pregunta:"¿Cuál es el primer paso ante un reclamo?",
+opciones:[
+"Reiniciar máquina",
+"Tomar evidencia en video y fotos",
+"Pagar inmediatamente",
+"Cerrar ticket"
+],
+correcta:1
+},
+
+{
+pregunta:"¿Qué debe revisarse en una jugada reclamada?",
+opciones:[
+"Videos",
+"Fotos",
+"Logs",
+"Todas las anteriores"
+],
+correcta:3
+},
+
+{
+pregunta:"¿Qué significa Hold?",
+opciones:[
+"Jackpot",
+"Ingreso retenido por la operación",
+"Bono",
+"Ticket"
+],
+correcta:1
+},
+
+{
+pregunta:"¿Qué impacto tiene un pago de B/.67,648 en una sala?",
+opciones:[
+"Aumenta el Hold",
+"Disminuye el Hold",
+"No afecta",
+"Aumenta visitas"
+],
+correcta:1
+},
+
+{
+pregunta:"¿Cuál sala tuvo hold negativo en varios reportes recientes?",
+opciones:[
+"Villa Lucre",
+"David Plaza",
+"Chorrera",
+"Santiago"
+],
+correcta:2
+}
+
+];
+
+let actual = 0;
+let puntos = 0;
+let respondida = false;
+
+const pregunta =
+document.getElementById("pregunta");
+
+const opciones =
+document.getElementById("opciones");
+
+const resultado =
+document.getElementById("resultado");
+
+const puntaje =
+document.getElementById("puntaje");
+
+const contador =
+document.getElementById("contador");
+
+function cargarPregunta(){
+
+respondida = false;
+
+resultado.innerHTML="";
+
+contador.innerHTML =
+`Pregunta ${actual + 1} de ${preguntas.length}`;
+
+pregunta.innerHTML =
+preguntas[actual].pregunta;
+
+opciones.innerHTML="";
+
+preguntas[actual].opciones.forEach(
+(opcion,indice)=>{
+
+const boton =
+document.createElement("button");
+
+boton.className="opcion";
+
+boton.innerHTML=opcion;
+
+boton.onclick=()=>responder(indice);
+
+opciones.appendChild(boton);
+
+});
+
+}
+
+function responder(indice){
+
+if(respondida) return;
+
+respondida=true;
+
+if(indice===preguntas[actual].correcta){
+
+resultado.innerHTML=
+"✅ Correcto";
+
+puntos+=100;
+
+}else{
+
+resultado.innerHTML=
+"❌ Incorrecto";
+
+}
+
+puntaje.innerHTML=
+`Puntos: ${puntos}`;
+
+}
+
+document
+.getElementById("siguiente")
+.addEventListener("click",()=>{
+
+actual++;
+
+if(actual>=preguntas.length){
+
+let nivel="🥉 Principiante";
+
+if(puntos>=300)
+nivel="🥈 Intermedio";
+
+if(puntos>=500)
+nivel="🥇 Experto";
+
+document.body.innerHTML=`
+
+<div style="text-align:center;
+padding:50px;
+font-family:Arial">
+
+<h1>🏆 Juego Terminado</h1>
+
+<h2>Puntaje Final</h2>
+
+<h1>${puntos}</h1>
+
+<h2>${nivel}</h2>
+
+<button onclick="location.reload()"
+style="
+padding:15px 25px;
+font-size:18px;
+cursor:pointer;
+background:#10b981;
+color:white;
+border:none;
+border-radius:10px;">
+Jugar de Nuevo
+</button>
+
+</div>
+`;
+
+return;
+}
+
+cargarPregunta();
+
+});
+
+cargarPregunta();
+
+</script>
+
+</body>
+</html>
